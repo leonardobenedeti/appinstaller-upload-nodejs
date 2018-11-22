@@ -1,6 +1,6 @@
 {
   "name": "@leonardobenedeti/appinstaller-upload-nodejs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "cli.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/leonardobenedeti/appinstaller-upload-nodejs#readme",
   "bin": {
-    "appinstaller": "./index.js"
+    "appinstaller": "bin/appinstaller"
   },
   "dependencies": {
     "minimist": "^1.2.0",
