@@ -8,23 +8,47 @@ module.exports = async (args) => {
     const spinner = ora().start()
     try{
         
-        var formData = {
+        var objInfos = {
             icon: fs.createReadStream(args.icon),
             nome: args.name,
             bundle: args.bundle,
             desc: args.desc,
-            android: fs.createReadStream(args.apk),
-            ios: fs.createReadStream(args.ipa),
             listName: args.listName,
             env: args.env,
-            share: args.env,
+            share: args.share,
             password: args.password ? args.password : ''
         };
+
+
+        var objAndroid = {
+            android: args.apk ? fs.createReadStream(args.apk) : null
+        }
+
+        var objiOS = {
+            ios: args.ipa ? fs.createReadStream(args.ipa) : null
+        }
+
+        var formData;
+
+        if(args.apk && args.ipa){
+            console.log("Apps to upload - iOS e Android");
+            formData = Object.assign(objInfos, objAndroid, objiOS)
+        }
+
+        if(args.apk && !args.ipa){
+            console.log("Apps to upload - Only Android");
+            formData = Object.assign(objInfos, objAndroid)
+        }
+
+        if(args.ipa && !args.apk){
+            console.log("Apps to upload - Only iOS");
+            formData = Object.assign(objInfos, objiOS)
+        }
 
         request.post({url:'https://api.appinstaller.com.br/newapp', formData: formData}, function(err, httpResponse, body) {
             if (err) {
                 spinner.stop()
-                return console.error('upload failed:', err);
+                return console.error('Upload failed:', err);
             }else{
                 console.log('Upload successful!');
                 spinner.stop()

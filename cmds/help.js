@@ -18,10 +18,14 @@ const menus = {
       --bundle ...... 'com.awesome.app'  *REQUIRED
       --desc ........ 'description telling how awesome is the app'  *REQUIRED
       --env ......... production | homologation | development  *REQUIRED
-      --share ....... public | private .... if private demands password  *REQUIRED
+      --share ....... public | private .... if 'private' demands password  *REQUIRED
       --password .... Password to share your apps with a little bit security  *Default ''
-      --ipa ......... Path to your .ipa (Build iOS) *REQUIRED
-      --apk ......... Path to your .apk (Build Android) *REQUIRED
+      --listName .... Name of yout list @user *REQUIRED
+      --ipa ......... Path to your .ipa (Build iOS)  # IMPORTANT
+      --apk ......... Path to your .apk (Build Android)  # IMPORTANT
+      
+      ## IMPORTANT ##
+      For .ipa and/or .apk - At least one of the two needs to be uploaded. 
       
       `,
   }
