@@ -5,58 +5,46 @@ const ora = require('ora')
 
 module.exports = async (args) => {
 
-    const spinner = ora().start()
-    try{
-        
-        var objInfos = {
-            icon: fs.createReadStream(args.icon),
-            nome: args.name,
-            bundle: args.bundle,
-            desc: args.desc,
-            listName: args.listName,
-            env: args.env,
-            share: args.share,
-            password: args.password ? args.password : ''
-        };
+    var neededKeys = ["icon", "name", "bundle", "desc", "listName", "share"]
 
+    var requestKeys = [];
 
-        var objAndroid = {
-            android: args.apk ? fs.createReadStream(args.apk) : null
+    neededKeys.forEach((key)=>{
+        if(Object.keys(args).indexOf(key)== -1){
+            requestKeys.push(key);
         }
+    })
+    
+    if(requestKeys.length>0){
+        return console.error("*** ERROR - This parameters are needed: " + requestKeys)
+    }else{
+        const spinner = ora().start()
+        try{
+            
+            var formData = {
+                icon: fs.createReadStream(args.icon),
+                nome: args.name,
+                bundle: args.bundle,
+                desc: args.desc,
+                listName: args.listName,
+                share: args.share,
+                password: args.password ? args.password : ''
+            };
 
-        var objiOS = {
-            ios: args.ipa ? fs.createReadStream(args.ipa) : null
+            request.post({url:'https://api.appinstaller.com.br/v2/newapp', formData: formData}, function(err, httpResponse, body) {
+                if (err) {
+                    spinner.stop()
+                    return console.error('Upload failed:', err);
+                }else{
+                    console.log('App created!');
+                    console.log(httpResponse.body)
+                    spinner.stop()
+                }
+            });
+            
+        }catch(err){
+            spinner.stop()
+            console.log(err)
         }
-
-        var formData;
-
-        if(args.apk && args.ipa){
-            console.log("Apps to upload - iOS e Android");
-            formData = Object.assign(objInfos, objAndroid, objiOS)
-        }
-
-        if(args.apk && !args.ipa){
-            console.log("Apps to upload - Only Android");
-            formData = Object.assign(objInfos, objAndroid)
-        }
-
-        if(args.ipa && !args.apk){
-            console.log("Apps to upload - Only iOS");
-            formData = Object.assign(objInfos, objiOS)
-        }
-
-        request.post({url:'https://api.appinstaller.com.br/newapp', formData: formData}, function(err, httpResponse, body) {
-            if (err) {
-                spinner.stop()
-                return console.error('Upload failed:', err);
-            }else{
-                console.log('Upload successful!');
-                spinner.stop()
-            }
-        });
-        
-    }catch(err){
-        spinner.stop()
-        console.log(err)
     }
 }

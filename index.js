@@ -18,6 +18,10 @@ module.exports = () => {
       require('./cmds/newapp')(args)
       break
 
+    case 'newrelease':
+      require('./cmds/newrelease')(args)
+      break
+
     case 'version':
       require('./cmds/version')(args)
       break
